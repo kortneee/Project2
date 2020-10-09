@@ -6,16 +6,18 @@ import sys
 def read_inventory(fn): 
     """Reads fn, if the command is inventory, returns the list inventory, in the order: index, name,
     price, and number available. If fn is the index, the price of the item will return """
-    inventory=open(r'C:\Users\kreiss2\Documents\Python\VendingMachine\inventory.txt')
-    fin= inventory.read()
+    inventory= open(r'C:\Users\kreiss2\Documents\Python\VendingMachine\inventory.txt')
+    invlist=inventory.read()
     inventory.close()
-    invlist=list(fin.splitlines())
-    print(invlist)
-    #if fn =="inventory":
-     #   for i in range(len(inventory)):
-      #      print(i, inventory[i]['name'], '${:,.2f}'.format(float(inventory[i]['price'])/100), "("+str(inventory[i]['stock']),"available)")
-    #elif (int(fn)<6):
-     #   return(float(inventory[int(fn)]['price'])/100)
+    ##        mylist= [{'name:' , 'stock:' ,'price',}]
+    invlist=list(invlist.splitlines())
+    for i in range(len(invlist)):
+        invlist[i] = invlist[i].split(",")
+    if fn =="inventory":
+        for i in range(len(invlist)):
+            print(i, invlist[i][2], '${:,.2f}'.format(float(invlist[i][1])/100), "("+str(invlist[i][0]),"available)")
+    elif (int(fn)<6):
+        return(float(invlist[int(fn)][1])/100)
 def dispense_change(cents):
     while cents>0:
         if cents>=0.25:
@@ -50,10 +52,10 @@ while (credit >= 0.00 and credit<=highprice):
     elif (int(task)<=5):
         if (credit < read_inventory(task)):
             print("MSG: Insufficient credit")
-        elif(inventory[int(task)]['stock']>=0):
+        elif(invlist[int(task)]['stock']>=0):
             credit= credit-read_inventory(task)
-            inventory[int(task)]['stock'] = (inventory[int(task)]['stock'])-1
-            print("VEND:", inventory[int(task)]['name'])
+            invlist[int(task)][0] = (invlist[int(task)][0])-1
+            print("VEND:", invlist[int(task)][2])
             print(dispense_change(credit))
     elif(task=="exit"):
         break
