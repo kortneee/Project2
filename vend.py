@@ -9,14 +9,17 @@ def read_inventory(fn):
     inventory= open(r'C:\Users\kreiss2\Documents\Python\VendingMachine\inventory.txt')
     invlist=inventory.read()
     inventory.close()
-    ##        mylist= [{'name:' , 'stock:' ,'price',}]
     invlist=list(invlist.splitlines())
+    dict_inventory=[]
     for i in range(len(invlist)):
         invlist[i] = invlist[i].split(",")
     if fn =="inventory":
         for i in range(len(invlist)):
+            dict_inventory.append({"name": invlist[i][2], 
+                        "stock": invlist[i][0], 
+                        "price": (invlist[i][1]) })
             print(i, invlist[i][2], '${:,.2f}'.format(float(invlist[i][1])/100), "("+str(invlist[i][0]),"available)")
-    elif (int(fn)<6):
+    elif(int(fn)<6):
         return(float(invlist[int(fn)][1])/100)
 def dispense_change(cents):
     while cents>0:
@@ -52,10 +55,10 @@ while (credit >= 0.00 and credit<=highprice):
     elif (int(task)<=5):
         if (credit < read_inventory(task)):
             print("MSG: Insufficient credit")
-        elif(invlist[int(task)]['stock']>=0):
+        elif(dict_inventory[int(task)]['stock'] >=0):
             credit= credit-read_inventory(task)
-            invlist[int(task)][0] = (invlist[int(task)][0])-1
-            print("VEND:", invlist[int(task)][2])
+            dict_inventory[int(task)]['stock'] = (dict_inventory[int(task)]['stock'])-1
+            print("VEND:", dict_inventory[int(task)][2])
             print(dispense_change(credit))
     elif(task=="exit"):
         break
